@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<% if(req.getLocale() != "en"){ %>
+<html dir="rtl">
+<% } else { %>
+<html>
+<% } %>
+<head>
+  <meta charset="UTF-8">
+   <meta http-equiv="Content-Security-Policy" content="default-src *; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google.com https://cdnjs.cloudflare.com https://seal.godaddy.com https://maps.google.com https://maps.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; img-src *; font-src *;">
+  <meta http-equiv="X-Content-Security-Policy" content="default-src *; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google.com https://cdnjs.cloudflare.com https://seal.godaddy.com https://maps.google.com https://maps.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; img-src *; font-src *;">
+  <meta http-equiv="X-WebKit-CSP" content="default-src *; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google.com https://cdnjs.cloudflare.com https://seal.godaddy.com  https://maps.google.com https://maps.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; img-src *; font-src *;">
+  <title><%= __('app_title') %></title>
+  <link rel="icon" href="https://api.zaincash.iq/favicon.png" sizes="16x16" type="image/png">
+
+  <!-- Viewport mobile tag for sensible mobile support -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <% if(req.getLocale() == "en"){ %>
+  <link rel="stylesheet" href="/styles/importer.css">
+  <% } else { %>
+  <link rel="stylesheet" href="/styles/importer-rtl.css">
+  <% } %>
+
+</head>
+<body class="page-brand">
+<h2 class="logoandslogan">
+  <img style="height: 46px;" src="/images/zaincashlogo-<%= req.getLocale() %>.png" alt="">
+  <span style='font-weight:700'><%- i18n('app_bar_title') %></span>
+</h2>
+<main class="content">
+  <div class="content-header">
+  </div>
+  <div class="container-fluid">
+    <div class="row nopad-nomarg" style="min-height:300px">
+      <%- body %>
+    </div>
+  </div>
+</main>
+<div id="container"></div>
+<div class="container darkgrey-color text-center">
+  <div class="row">
+    <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2">
+      <p class="problem-info" style="padding-top: 40px;">
+        <%= __('problem_info') %>
+      </p>
+      <p class="problem-info" style="font-weight: bold;margin-bottom: 20px;color: #212121;">
+        <%= __('problem_info2') %>
+      </p>
+      <span id="siteseal" style="width: 100%; display: inline-block; text-align: center;">
+        <script type="text/javascript"
+                src="https://seal.godaddy.com/getSeal?sealID=aY7J1lXj0e14QQ29Iy4L4gjMixngh0AaOImEnHgox9wkxYh00rMYeNypxFTb"></script>
+      </span>
+      <a id="how-to-use" data-toggle="modal" data-target="#myModal" style="width: 100%; text-align: center;">
+        <%= __('how_to_use') %>
+      </a>
+      <a id="youtubeLink" style="text-align: center; float: left; width: 100%;" data-toggle="modal" href="https://www.youtube.com/embed/QiPw_mbdrs0"
+         data-target="#youtubeModal">
+        <img style="cursor: pointer" src="/images/youtube.png" width="40">
+      </a>
+      <p class="right-reserved" style="margin-top: 12px;">
+        <%= __('right_reserved') %>
+      </p>
+    </div>
+    <style>
+      #siteseal img,#youtubeLink img{
+        display:inline-block!important;
+        margin-bottom: 10px;
+        margin-top: 10px;
+      }
+    </style>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-sm text-center">
+    <div class="modal-header">
+      <a class="close-modal" data-dismiss="modal"
+         aria-label="Close"><span aria-hidden="true">&times;</span></a>
+    </div>
+    <img src="/images/process-<%= req.getLocale() %>.png" alt="">
+  </div>
+</div>
+
+<div class="modal fade" id="youtubeModal" tabindex="-1" role="dialog" aria-labelledby="ZainCash">
+  <div class="modal-dialog modal-sm text-center">
+    <div class="modal-header">
+      <a class="close-modal" data-dismiss="modal"
+         aria-label="Close"><span aria-hidden="true">&times;</span></a>
+    </div>
+    <div class="modal-body">
+    </div>
+  </div>
+</div>
+
+<!--SCRIPTS-->
+<script src="/js/dependencies/1jquery.min.js"></script>
+<script src="/js/dependencies/2base.min.js"></script>
+<script src="/js/dependencies/jquery-ui.min.js"></script>
+<script src="/js/dependencies/trianglify.min.js"></script>
+<script src="/js/app.js"></script>
+<!--SCRIPTS END-->
+
+<script>
+  $('#youtubeLink').on('click', function (e) {
+    e.preventDefault();
+    var url = $(this).attr('href');
+    $(".modal-body").html('<iframe width="560" height="315" frameborder="0" scrolling="no" allowtransparency="true" src="'+url+'"></iframe>');
+  });
+  var validation_phonestatus = '<%= __('validation_phonestatus') %>'
+  var validation_phonenumber = '<%= __('validation_phonenumber') %>'
+  var validation_phonenumberpin = '<%= __('validation_phonenumberpin') %>'
+  var validation_captcha = '<%= __('validation_captcha') %>'
+  var validation_wait = '<%= __('validation_wait') %>'
+  var validation_otp = '<%= __('validation_otp') %>'
+  var email_validation = '<%= __('email_validation') %>'
+  var email_sent_successfully = '<%= __('email_sent_successfully') %>'
+  var sending_sms_error = '<%= __('sending_sms_error') %>'
+  var sms_sent_successfully = '<%= __('sms_sent_successfully') %>'
+
+  var agent_name = '<%= __('agent_name') %>'
+  var code = '<%= __('code') %>'
+  var phone = '<%= __('phone_number') %>'
+  var address = '<%= __('address') %>'
+
+</script>
+<script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false&&callback=initMap&key=AIzaSyBFZW5xKpsqbf05UY01NQNo17YbfqsEY-E"></script>
+</body>
+</html>

@@ -1,0 +1,189 @@
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<div class="col-lg-2 col-md-2">
+  <h1></h1>
+
+  <ul class="mnu">
+    <li><a href="#register">Register a Wallet</a></li>
+    <li><a href="#generate">Generate ID</a></li>
+    <li><a href="#payPage">Open The Pay Page</a></li>
+    <li><a href="#opt">Receive and Post the OTP</a></li>
+    <li><a href="#inform">Payment Completion</a></li>
+
+    <li><a href="#check">Check Transaction </a></li>
+
+  </ul>
+
+</div>
+<div class="col-lg-8 col-md-8">
+  <h1 class="h1-main-Home"><a id="gettingstarted"></a>ZainCash Integration Guide</h1>
+  <p>This guide details how to integrate the ZainCash online payment service into your website.</p>
+  <h2><a id="register"></a>Register a Wallet</h2>
+
+  <p>To integrate your site application with ZainCash in order to start getting paid online, you first have to register a wallet, choosing from one of the three types of wallets available: </p>
+  <ul>
+    <li>Special Wallet: for small business and startups, with a maximum of 100 million transactions per month and no daily limit.
+    </li>
+    <li>Corporate Wallet: for large businesses, the maximum amount of transactions per month depends on the size of the company.
+    </li>
+    <li>Government Wallet: for government entities.</li>
+  </ul>
+  <p>Your website has to be submitted first to ZainCash to make sure it does not violate any of ZainCash’s security guidelines.</p>
+  <p>After you finish registering a wallet, you’ll be sent an email with the following details:</p>
+  <ul>
+    <li>1. Test Merchant Phone Number and Pin.</li>
+    <li>2. Test Customer Phone Number and Pin.</li>
+    <li>3. Private Key to generate JSON Web Tokens.</li>
+  </ul>
+  <p>After you finish inserting and confirguring ZainCash’s checkout button on your website using a testing environment, you will be provided with the production credentials.
+  </p>
+
+  <div class="url">URLs to be used:</div>
+  <ul>
+    <li>Development URL: https://test.zaincash.iq/</li>
+    <li>Production URL: https://api.zaincash.iq/</li>
+  </ul>
+
+  <h2><a id="generate"></a>Generate a transaction ID</h2>
+
+  <p>The first step is to issue a transaction ID that you’ll be using later on.
+  </p>
+  <p>Based on the <strong>Private Key</strong> that was sent to you through email, generate a JWT token <span
+      class="url">(https://jwt.io/)</span> after filling the payload with the <strong>amount</strong> to be transferred, <strong>msisdn</strong> that represents the merchant phone number (it has the format <strong>96478xxxxxxxx</strong> or
+    <strong>96479xxxxxxxx</strong>), <strong>serviceType</strong> that represents the type of service (like “AAA books website”), the <strong>orderId</strong>: a reference for the order primary key in your website, and the <strong>redirectUrl</strong> that represents the webpage the user is redirected to: it is either a page that displays an error message or a confirmation message for a successful transaction.</p>
+
+  <div class="alert">Modifying orderId and redirectUrl is optional.</div>
+
+  <p>Integrate within the code of your website the capability of generating a transaction ID, using the the token generated and the Merchant ID provided to you by ZainCash.</p>
+
+  <div class="alert">It is recommended to time the transaction ID to be issued right after choosing ZainCash as a payment method (i.e. the transaction ID is not generated until after the site user chooses to use ZainCash as a payment method as opposed to choosing other payment platforms).</div>
+
+  <p>The language to be used can also be specified within the code: in this case, we have English, Kurdish and Arabic to choose from.
+  </p>
+  <p>For security considerations, the transaction ID generated will only be valid for one hour.
+  </p>
+  <p class="url">NodeJS Example</p>
+
+   <pre><code>app.get('/PageAfterClickOnSubmitWithZainCash', function (req, res) {
+    jwt.sign({
+        amount: 1000,//Product Ammout
+        serviceType: 'AAA books website',
+        msisdn: 9647911111111,
+        orderId: 12345,//optional
+        redirectUrl: "http://www.yourwebiste.com/zain_order.php",//optional
+    }, 'secretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecret', {
+        expiresIn: '4h'
+    }, function (err, token) {
+        request.post({
+            url: 'https://test.zaincash.iq/transaction/init',
+            form: {
+                token: token,
+                merchantId: "572487bca0a4d6f2688c1ee3",
+                lang: "ar"//optional
+            }
+        }, function (err, httpResponse, body) {
+            var body = JSON.parse(body); // response of body { id : "asdae123asd123asd" }
+            if (body.id)
+                return res.redirect('https://test.zaincash.iq/transaction/pay?id=' + body.id);
+            return res.redirect('/payment?msg=cannot_generate_token');
+        })
+    });
+});</code></pre>
+  <h2><a id="payPage"></a>Open the Pay Page</h2>
+  <p>Insert the following lines of HTML code to add the “Pay with ZainCash” button:
+  </p>
+          <pre><code>
+&lt;button class=&quot;zaincash-btn&quot; &gt;
+  &lt;img  style=&quot;vertical-align:middle&quot; src=&quot;https://test.zaincash.iq/images/zaincash-ar.png&quot;&gt;
+&lt;/button&gt;
+          </code></pre>
+  <p>Add the following CSS code for aesthetics:
+  </p>
+          <pre><code>
+.zaincash-btn {
+    background: #191817; /* Old browsers */
+    border-radius:30px;
+    border: none;
+    outline: none;
+    padding-right: 15px;
+    padding-left: 15px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+
+.zaincash-btn:hover{
+    background: #333231;
+    transition: all 0.2s;
+    color: #fff;
+    border-radius:30px;
+    border: none;
+    outline: none;
+}
+
+.zaincash-btn &gt; img {
+    width: 160px;
+}
+          </code></pre>
+
+  <p>
+    When a user clicks on the checkout button on your website, redirect the user to a page where the transaction ID will be issued.
+  </p>
+  <p>To open the pay page as a pop-up, configure the URL of the same webpage to open in a separate window whenever the user clicks on the checkout button.
+  </p>
+  <p>The user will be prompted to enter their credentials (phone number and PIN).
+  </p>
+  <p>It’s up to you to post the data to a popup or an iframe inside a modal window.</p>
+  <p><img class="img-responsive" src="images/payment_portal.png" alt=""></p>
+  <h2><a id="opt"></a>Receive and Post the OTP</h2>
+  <p>Upon phone number and PIN validation the user will receive an SMS containing a 4-digit OTP. This OTP should be inserted by the user within the portal, in order to continue the payment process.
+  </p>
+  <p><img class="img-responsive" src="images/otp.png" alt=""></p>
+  <h2><a id="inform"></a>Payment Completion</h2>
+  <p>It you are sending a URL value to redirect, the success or the error of the operation will be detected within the code of the redirect URL parameter in the form of a JWT token. The signature of the token will have to be valid in order to get the value of the payload.
+  </p>
+  <p><img class="img-responsive" src="images/success.png" alt=""></p>
+  <p>The EventListener method can be used when on the pay page popup, in order to know whether the transaction was a success or if an error occurred. The postmessage method can be used to inform whether or not an error occurred.</p>
+
+  <p>This can be implemented using the following lines of code:</p>
+          <pre><code>
+window.addEventListener('message',function(event) {
+
+  if(event.origin !== 'https://test.zaincash.iq') return;
+
+  if (event.data.status == 'failure') {
+    window.location.href = 'failed'
+  } else if (event.data.status == 'success') {
+    window.location.href = 'success'
+  }
+},false);
+          </code></pre>
+  <h2><a id="check"></a>Check the status of the transaction</h2>
+  <p>In order to check the status of the transaction, take the transaction ID and make sure it is associated with the correct ID. The transaction ID is provided to the user after the payment process is complete. The transaction ID will expire after 1 hour so the checking should be done within the hour.
+  </p>
+  <p>Check Status API is similar to init API, this is where a token should be generated and inputted along with the merchant ID provided to you by Zain, along with the “secret”-based signature into the JWT.io site. Below is a NodeJS example on how to check the status of the transaction.</p><pre><code>
+
+app.get('/get', function (req, res) {
+    jwt.sign({
+        id: '578c8d1cc4feda8b118e60e6',
+        msisdn: 9647911111111,
+    }, 'secretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecret', {
+        expiresIn: '4h'
+    }, function (err, token) {
+        request.post({
+            url: 'https://test.zaincash.iq/transaction/get',
+            form: {
+                token: token,
+                merchantId: "572487bca0a4d6f2688c1ee3"
+            }
+        }, function (err, httpResponse, body) {
+            var transaction = JSON.parse(body);
+            console.log(transaction);
+            res.render('transaction', transaction);
+        })
+    });
+});
+
+          </code></pre>
+</div>

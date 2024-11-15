@@ -1,0 +1,159 @@
+<script>var payByReference ="<%= payByReference %>";</script>
+<script>var language = "<%= req.getLocale() %>";</script>
+<%
+var marginLeft = "0";
+if(req.getLocale() != "en"){
+  marginLeft = "100"; %>
+<script src='https://www.google.com/recaptcha/api.js?hl=ar'></script>
+<% } else { %>
+<script src='https://www.google.com/recaptcha/api.js?hl=en'></script>
+<% } %>
+<div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2">
+  <p id="AmountWithCharge" style="text-align:center;color:#C6C6C6;font-weight:bold;margin-bottom: 20px;">
+      <%-  i18n('you_will_pay_the_amout_value', transaction.to.name, transaction.amount) %>
+  </p>
+  <p id="AmountWithoutCharge" style="display: none;text-align:center;color:#C6C6C6;font-weight:bold;margin-bottom: 20px;">
+      <%-  i18n('you_will_pay_the_amout_value_without_fee', transaction.to.name, transaction.amount) %>
+  </p>
+  <div id="stepsErrors" style="display: none">
+    <h1><%= __('payment_error') %></h1>
+    <h3></h3>
+  </div>
+  <div id="accordion">
+    <h3><img src="/images/wallet_pay.png" /><%= __('pay_using_your_wallet') %></h3>
+    <div>
+      <form id="payment-form" action="/transaction/processingOTP" method="POST">
+        <!--step1-->
+        <div id="step1">
+          <h3 style="font-size:16px; color: #9D9D9D;font-weight: bold;padding-top: 15px;">
+            <%= __('enter_credentials') %>
+          </h3>
+          <!--Phone Number-->
+          <div class="form-group form-group-label form-group-brand">
+            <label class="floating-label"><%= __('phone_number') %></label>
+            <input autocomplete="off" maxlength="13" name="phonenumber" class="form-control" id="phonenumber"
+                   type="phonenumber">
+            <label class="pay-form-label pull-right" id="phonestatus"></label>
+            <label class="pay-form-label" dir="rtl"><%= __('phone_format') %></label>
+          </div>
+
+          <!--Pin-->
+          <div class="form-group form-group-label form-group-brand">
+            <label class="floating-label"><%= __('pin') %></label>
+            <input maxlength="6" pattern=".{4,6}" title="4 to 6 characters" name="pin" id="pin" type="password" class="form-control ">
+            <label class="pay-form-label "><%= __('pin_hint') %></label>
+          </div>
+        </div>
+
+        <!--step2-->
+        <div id="step2" style="display: none">
+          <h3>
+            <%= __('please_confirm_the_payment_before_proceed') %>
+          </h3>
+          <hr>
+          <div>
+            <table class="table">
+              <tr>
+                <td style="width:25%"><%= __('you_will_pay_the_amout') %></td>
+                <td><%= transaction.amount %> <%= __('iqd') %></td>
+              </tr>
+              <tr id="fees_tr">
+                <td style="width:25%"><%= __('fees_value') %></td>
+                <td><span id="totalFees"></span> <%= __('iqd') %></td>
+              </tr>
+              <tr id="discount" class="alert">
+                <td style="width:25%">Discount</td>
+                <td><span style="font-weight: bold" id="discount"></span>XXX <%= __('iqd') %></td>
+              </tr>
+              <tr id="total_tr" class="alert">
+                <td style="width:25%"><%= __('total') %></td>
+                <td><span style="font-weight: bold" id="total"></span> <%= __('iqd') %></td>
+              </tr>
+            </table>
+          </div>
+          <!--otp-->
+          <div class="form-group form-group-label form-group-brand">
+            <label><%= __('otp') %></label>
+            <div class="otp-container">
+           	<div class="form-group form-group-label form-group-brand">
+                <label class="floating-label"><%= __('otp_input') %></label>
+                <input  autocomplete="off" maxlength="4" name="otp" class="form-control" id="otp"
+                       type="password">
+                <label class="pay-form-label pull-right" id="phonestatus"></label>
+                <label class="pay-form-label" dir="rtl"></label>
+              </div> 
+	   </div>
+          </div>
+          <br>
+        </div>
+
+        <!-- CAPTCHA -->
+          <!--<div class="col-lg-6 col-md-6" id="captcha">
+            <div class="g-recaptcha" data-sitekey="<%= sails.config.connections.sitekey %>"></div>
+          </div>-->
+            <div class="row text-left ">
+              <div id="stepsButtons" class="col-lg-12 col-md-12" style="height: 77px;">
+                <button class="pull-right" style="margin-top: 15px;">
+                  <img class="align-middle" src="/images/zaincash-<%= req.getLocale() %>.png">
+                </button>
+              </div>
+            </div>
+
+        <input id="id" name="id" type="hidden" value="<%= id %>">
+        <input type='hidden' name='_csrf' value='<%= _csrf %>'>
+      </form>
+    </div>
+    <%
+    if(payByReference!=0){ %>
+      <h3 onclick="reloadMap()"><img src="/images/agent_pay.png" /><%= __('pay_at_agent_or_via_a_friend') %></h3>
+      <div class="row">
+        <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12 floatright">
+            <div class="ref-container">
+              <div class="floatright" style="padding-top: 50px;">
+                  <input type="hidden" value="<%=transaction.referenceNumber %>" id="reference-number" />
+                  <div class="transaction-reference-id"><span><%= __('reference_number') %></span> <%=transaction.referenceNumber %></div>
+                  <a href="javscript:void(0)" onclick="printRefId()" class="custom-btn btn btn-info btn-xs" role="button"><%= __('print') %></a>
+              </div>
+              <div id="qr-container" class="float-qr" style="width:164px;">
+                <img src="<%=fullQrImagePath %>" />
+              </div>
+            </div>
+            <div class="splitter"></div>
+          <!--Phone Number-->
+          <div class="ref-container">
+            <div class="form-group form-group-label form-group-brand" style="margin:0px;">
+              <label class="floating-label"><%= __('phone_number') %></label>
+              <input autocomplete="off" maxlength="13" name="phonenumber" class="form-control" type="text" id="sms-phone-number">
+              <label class="pay-form-label pull-right" id="smsphonestatus"></label>
+              <label class="pay-form-label" dir="rtl"><%= __('phone_format') %></label>
+            </div>
+            <a href="javscript:void(0)" onclick="sendSMS()" class="custom-btn btn btn-info btn-xs" role="button" style="margin-top: 15px;"><%= __('send_sms') %></a>
+          </div>
+          <div class="splitter"></div>
+          <div class="ref-container">
+            <!--Email-->
+            <div class="form-group form-group-label form-group-brand" style="margin:0px;">
+              <label class="floating-label"><%= __('email') %></label>
+              <input autocomplete="off" name="email" class="form-control" 
+                     type="email" id="email">
+            </div>
+            <a href="javscript:void(0)" onclick="sendEmail()" class="custom-btn btn btn-info btn-xs" role="button" style="margin-top: 15px;"><%= __('send_email') %></a>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12 floatright">
+        <label><%= __('map_information') %></label>
+        <div id="map" style="height:500px;display:inline-block;width:100%;"></div>
+        </div>
+      </div>
+    <% } %>
+  </div>
+  <div class="col-lg-12 col-md-12 pull-right">
+    <p style="margin-top: 35px;text-align:center;">
+      <% if(transaction && transaction.redirectUrl){ %>
+      <a style="color: #6C6C6C!important;font-weight: bold;text-decoration: underline;" href="<%= transaction.redirectUrl %>"><%= __('cancel_and_back_to_website') %></a>
+      <% }else{ %>
+      <a style="color: #6C6C6C!important;font-weight: bold;text-decoration: underline;" href="javascript: closePopup()"><%= __('cancel_and_back_to_website') %></a>
+      <% } %>
+    </p>
+  </div>
+</div>

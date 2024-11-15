@@ -1,0 +1,244 @@
+/**
+ * importer.less
+ *
+ * By default, new Sails projects are configured to compile this file
+ * from LESS to CSS.  Unlike CSS files, LESS files are not compiled and
+ * included automatically unless they are imported below.
+ *
+ * The LESS files imported below are compiled and included in the order
+ * they are listed.  Mixins, variables, etc. should be imported first
+ * so that they can be accessed by subsequent LESS stylesheets.
+ *
+ * (Just like the rest of the asset pipeline bundled in Sails, you can
+ * always omit, customize, or replace this behavior with SASS, SCSS,
+ * or any other Grunt tasks you like.)
+ */
+// For example:
+//
+// @import 'variables/colors.less';
+// @import 'mixins/foo.less';
+// @import 'mixins/bar.less';
+// @import 'mixins/baz.less';
+//
+// @import 'styleguide.less';
+// @import 'pages/login.less';
+@import 'base.less';
+
+// etc.
+body {
+  padding-bottom: 69px
+}
+
+a {
+  text-decoration: none;
+  color: #5A40FF !important;
+}
+
+a:hover {
+  color: #5A4000 !important;
+  text-decoration: none;
+}
+
+body, h1, h2, h3, h4, h5 {
+  font-family: 'Raleway', sans-serif;
+}
+
+.h1-main-Home {
+  font-weight: 700;
+}
+
+.ui-tab-tab {
+  margin-top: 10px
+}
+
+.logoandslogan {
+  position: absolute;
+  left: 20px;
+  top: 30px;
+  margin: 0px;
+}
+
+button {
+  background: #191817; /* Old browsers */
+  border-radius: 30px;
+  border: none;
+  outline: none;
+  padding-right: 15px;
+  padding-left: 15px;
+  padding-top: 7px;
+  padding-bottom: 7px;
+}
+
+button:hover {
+  background: #333231;
+  transition: all 0.2s;
+  color: #fff;
+  border-radius: 30px;
+  border: none;
+  outline: none;
+}
+
+button > img {
+  width: 250px;
+}
+
+.content-header {
+  /*background-color: #4C4F63 !important;*/
+  padding: 0px;
+  margin: 0px;
+  height: 106px;
+}
+
+.content-header canvas {
+  /*background-color: #4C4F63 !important;*/
+  padding: 0px;
+  margin: 0px;
+  height: 100%;
+}
+
+.content-heading {
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  margin-bottom: -58px;
+  padding-top: 68px;
+  padding-bottom: 58px;
+  z-index: 0
+}
+
+.header .dropdown.open .dropdown-toggle {
+  background-color: transparent
+}
+
+.page-brand .content-heading {
+  background-image: url(images/bg/brand.jpg)
+}
+
+.ui-card-pre {
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex
+}
+
+.darkgrey-color {
+  color: darkgrey;
+}
+
+.pay-form-label {
+  color: darkgrey;
+  font-size: 11px;
+}
+
+.nopad-nomarg {
+  padding: 0px;
+  margin: 0px;
+}
+
+.problem-info {
+  font-size: 14px;
+  margin: 6px 0px 0px 0px;
+}
+
+.right-reserved {
+  font-size: 10px;
+  margin-top: 0px;
+}
+
+.close-modal {
+  color: #FFFFFF !important;
+  font-size: 50px;
+}
+
+.mnu > li {
+  list-style: none;
+}
+
+@media only screen and (max-width: 500px) {
+
+  .logoandslogan {
+    position: absolute;
+    left: 10px;
+    top: 16px;
+    margin: 0px;
+    font-size: 20px;
+  }
+
+  .content-header {
+
+    height: 80px;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .ui-card-pre {
+    min-height: 189px
+  }
+
+  .ui-card-pre.ui-card-pre-media {
+    min-height: 408px
+  }
+}
+
+.url {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.alert {
+  color: #31708f;
+  background-color: #d9edf7;
+  border-color: #bce8f1;
+  padding: 5px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+#how-to-use, .close-modal {
+  cursor: pointer;
+}
+
+h3 {
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+hr {
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+.page-brand{
+  overflow-x:hidden;
+}
+#accordion > h3 > img{
+    margin-left: 40px;
+    margin-right: 15px;
+}
+.floatright{
+  float:left!important;
+}
+.float-qr{
+  float:right!important;
+}
+.transaction-reference-id{
+    text-align: right;
+    font-size: 20px;
+    margin:20px 0px;
+    font-family: monospace;
+}
+.otp-control {
+    border: 2px solid black;
+    width: 90px;
+    outline: none;
+    height: 35px;
+    letter-spacing: 10px;
+    font-size: 20px;
+    direction: ltr;
+    text-align: left;
+}
+

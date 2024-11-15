@@ -1,0 +1,27 @@
+<div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2">
+  <h3>
+    <%= __('payment_error') %>
+  </h3>
+  <hr>
+  <h5><%= __(error) %></h5>
+  <% if (details != "") { %>
+  <div>
+    <pre><%= details %></pre>
+  </div>
+  <% } %>
+  <br>
+  <% if(req.param('id')){ %>
+  <p class="pull-left nopad-nomarg">
+    <a href="javascript: window.close()"><%= __('back_to_website') %></a>
+  </p>
+  <script type="text/javascript">
+    <% if (typeof url !== 'undefined') { %>
+    window.location = "<%= url %>";
+    <% }else{ %>
+    window.onload = function () {
+      pushMessage("failure", "<%= __(error) %>");
+    }
+    <% } %>
+  </script>
+  <% } %>
+</div>

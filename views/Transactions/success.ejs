@@ -1,0 +1,40 @@
+<div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2">
+  <h3>
+    <%= __('succesful_transaction') %>
+  </h3>
+  <hr>
+  <table class="table">
+    <tbody>
+    <tr>
+      <td style="width: 25%"><%= __('transaction_id_is') %></td>
+      <td><%= transactionid %></td>
+    </tr>
+    <tr>
+      <td style="width:30%"><%= __('total') %></td>
+      <td><%= total %> <%= __('iqd') %></td>
+    </tr>
+    <tr class="alert">
+      <td style="width:30%"><%= __('your_new_balance_is') %></td>
+      <td><%= newbalance %> <%= __('iqd') %></td>
+    </tr>
+    </tbody>
+  </table>
+  <br>
+
+  <% if(req.param('id')){ %>
+  <% if(redirectUrl==''){ %>
+  <p class="pull-left nopad-nomarg">
+    <a href="javascript: window.close()"><%= __('back_to_website') %></a>
+  </p>
+  <% }else{ %>
+  <p class="pull-left nopad-nomarg">
+    <a href="<%= redirectUrl %>"><%= __('back_to_website') %></a>
+  </p>
+  <% } %>
+  <script type="text/javascript">
+    window.onload = function () {
+      pushMessage("success");
+    }
+  </script>
+  <% } %>
+</div>
